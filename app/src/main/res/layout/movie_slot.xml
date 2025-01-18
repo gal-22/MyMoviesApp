@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#525252"
+    android:id="@+id/movieSlotConstraints"
+    android:layout_marginBottom="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,3:2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/movieSlotPosterIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@drawable/tnfc0nj3bzhjrgjhkked6mhbdq5__1_" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/movieSlotNameTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/cardView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Elevation" />
+
+    <TextView
+        android:id="@+id/movieSlotYearTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#E60F0F"
+        android:padding="3dp"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/movieSlotNameTv"
+        app:layout_constraintTop_toBottomOf="@+id/movieSlotNameTv"
+        tools:text="1972" />
+
+    <ImageView
+        android:id="@+id/MovieSlotStarIv"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/movieSlotYearTv"
+        app:layout_constraintStart_toEndOf="@+id/movieSlotYearTv"
+        app:layout_constraintTop_toTopOf="@+id/movieSlotYearTv"
+        app:srcCompat="@drawable/star_outline" />
+
+    <TextView
+        android:id="@+id/MovieSlotRankTv"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/MovieSlotStarIv"
+        app:layout_constraintStart_toEndOf="@+id/MovieSlotStarIv"
+        app:layout_constraintTop_toTopOf="@+id/MovieSlotStarIv"
+        tools:text="4.5" />
+
+    <TextView
+        android:id="@+id/MovieSlotDescriptionTv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:maxLines="8"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/movieSlotYearTv"
+        app:layout_constraintTop_toBottomOf="@+id/movieSlotYearTv"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Hidden away among towering, snow-clad mountains, the Peakview Research Station is known for its groundbreaking weather and climate studies. Led by the pragmatic Dr. Anna Clark, the team arrives each autumn to record crucial data before the harsh winter closes in. But after an unexpected avalanche destroys their only communication link, the scientists find themselves completely cut off from civilization.  As the oxygen-deprived environment starts to take its toll, hallucinations and paranoia begin to creep in. Tension flares when a young researcher claims to have seen a figure wandering outside—impossible, given the dangerous conditions. When supplies start disappearing, loyalties fracture, and each scientist suspects the other of sabotage.  Desperate to discern reality from illusion, Dr. Clark discovers evidence suggesting someone—or something—has been manipulating conditions at Peakview from the start. Forced to confront both the brutal power of nature and the fragile boundaries of the human mind, the team races against time to uncover the truth. Their only hope for survival lies in unearthing what truly waits beyond the station walls—and why it seems determined to keep them at high altitude for good." />
+</androidx.constraintlayout.widget.ConstraintLayout>

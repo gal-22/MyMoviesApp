@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.moviesapp.Login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_homePageFragment"
+            app:destination="@id/homePageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homePageFragment"
+        android:name="com.example.moviesapp.HomePage.HomePageFragment"
+        android:label="fragment_home_page"
+        tools:layout="@layout/fragment_home_page" >
+        <action
+            android:id="@+id/action_homePageFragment_to_findMoviesFragment"
+            app:destination="@id/findMoviesFragment" />
+        <action
+            android:id="@+id/action_homePageFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_homePageFragment_to_orderHistory"
+            app:destination="@id/orderHistory" />
+        <action
+            android:id="@+id/action_homePageFragment_to_favoriteMoviesFragment"
+            app:destination="@id/favoriteMoviesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/findMoviesFragment"
+        android:name="com.example.moviesapp.FindMovies.FindMoviesFragment"
+        android:label="fragment_find_movies"
+        tools:layout="@layout/fragment_find_movies" />
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.moviesapp.UserProfile.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
+    <fragment
+        android:id="@+id/orderHistory"
+        android:name="com.example.moviesapp.OrderHistory.OrderHistory"
+        android:label="fragment_order_history"
+        tools:layout="@layout/fragment_order_history" />
+    <fragment
+        android:id="@+id/favoriteMoviesFragment"
+        android:name="com.example.moviesapp.FavoriteMovies.FavoriteMoviesFragment"
+        android:label="fragment_favorite_movies"
+        tools:layout="@layout/fragment_favorite_movies" />
+</navigation>
