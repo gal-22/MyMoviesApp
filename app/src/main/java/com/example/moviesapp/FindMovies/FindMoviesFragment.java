@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.SearchView;
 
 import com.example.moviesapp.Adapters.MoviesRecyclerViewAdapter;
 import com.example.moviesapp.ProjectClasses.Movie;
@@ -151,6 +152,20 @@ public class FindMoviesFragment extends Fragment implements FindMoviesContract.V
         });
         recyclerView = rootView.findViewById(R.id.findMoviesRecyclerView);
         this.findMoviesPresenter = new FindMoviesPresenter(FindMoviesFragment.this, getContext());
+        SearchView searchView = rootView.findViewById(R.id.findMoviesSearchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                findMoviesPresenter.onSearchViewTextChanged(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                findMoviesPresenter.onSearchViewTextChanged(newText);
+                return true;
+            }
+        });
         // Inflate the layout for this fragment
         return this.rootView;
     }

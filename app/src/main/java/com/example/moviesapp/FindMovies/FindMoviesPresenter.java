@@ -28,7 +28,18 @@ public class FindMoviesPresenter implements FindMoviesContract.Presenter{
     }
     @Override
     public void onSearchViewTextChanged(String text) {
+        if (text == null || text.isEmpty()) {
+            // If search text is empty, show all movies
+            findMoviesView.updateRecyclerView(movies);
+        } else {
+            // Search locally first (client-side filtering)
+            String lowerCaseText = text.toLowerCase();
 
+            ArrayList<Movie> filteredMovies = movies.stream()
+                    .filter(movie -> movie.getName().toLowerCase().contains(lowerCaseText))
+                    .collect(Collectors.toCollection(ArrayList::new));
+            findMoviesView.updateRecyclerView(filteredMovies);
+        }
     }
 
     @Override
