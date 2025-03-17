@@ -70,6 +70,10 @@ public class HomePageFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_home_page, container, false);
         Button findMoviesButton = view.findViewById(R.id.homeFindMoviesButton);
+        Button favoriteButton = view.findViewById(R.id.homeFavoriteMoviesButton);
+        Button orderButton = view.findViewById(R.id.homeOrderHistoryButton);
+        Button profileButton = view.findViewById(R.id.homeUserProfileButton);
+
         findMoviesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +82,32 @@ public class HomePageFragment extends Fragment {
                 );
             }
         });
+
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(
+                        R.id.action_homePageFragment_to_favoriteMoviesFragment
+                );
+            }
+        });
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(
+                        R.id.action_homePageFragment_to_orderHistory
+                );
+            }
+        });
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(
+                        R.id.action_homePageFragment_to_userProfileFragment
+                );
+            }
+        });
+
         // Inflate the layout for this fragment , we already did it before assigning the button in "view"
         return view;
     }

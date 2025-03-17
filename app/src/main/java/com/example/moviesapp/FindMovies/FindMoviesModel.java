@@ -1,22 +1,23 @@
 package com.example.moviesapp.FindMovies;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.moviesapp.Parsers.MovieParser;
-import com.example.moviesapp.ProjectClasses.Movie;
+import com.example.moviesapp.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FindMoviesModel implements FindMoviesContract.Model{
     private static final String TAG = "FindMoviesModel";
@@ -34,14 +35,14 @@ public class FindMoviesModel implements FindMoviesContract.Model{
     }
 
     @Override
-    public void loadMovies() {
+    public void loadMoviesTMDB() {
         // If you need to notify a Presenter when movies are loaded,
         // you'll need a callback method with a listener parameter, e.g.:
         // public void loadMovies(OnMoviesLoadedListener listener) { ... }
 
         // For demonstration, here is a basic example that just logs and shows a Toast.
         // Replace "YOUR_API_KEY" with your actual TMDB v3 API key.
-        String url = "https://api.themoviedb.org/3/movie/now_playing"
+        String tmdbURL = "https://api.themoviedb.org/3/movie/now_playing"
                 + "?api_key=" + apiKey  // <-- Replace with your real key
                 + "&language=en-US&page=1";
 
@@ -51,36 +52,95 @@ public class FindMoviesModel implements FindMoviesContract.Model{
         // 2) Build the JsonObjectRequest
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
-                url,
+                tmdbURL,
                 null,  // No request body for GET
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // This method runs on the main thread
-                        JSONArray results = response.optJSONArray("results");
                         try {
-                            if (results != null) {
-                                List<Movie> movies = MovieParser.parseMovies(results);
-                                Log.d(TAG, "onResponse: " + movies);
-                            }
+                            presenter.onMoviesLoaded(null, response);
                         } catch (JSONException e) {
-                            throw new RuntimeException(e);
+                            try {
+                                presenter.onMoviesLoaded(e, null);
+                            } catch (JSONException ex) {
+                                throw new RuntimeException(ex);
+                            }
                         }
-                        // If you have a callback, call listener.onSuccess(response.toString());
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-
-                        // If you have a callback, call listener.onError(error.toString());
                     }
                 }
         );
 
         // 3) Add request to the queue
         requestQueue.add(jsonObjectRequest);
+    }
+
+    @Override
+    public void loadMovies() {
+        // Local server endpoint for movies (using 10.0.2.2 for emulator access to localhost)
+        String url = "http://10.0.2.2:8080/api/movies";
+
+        // Create a RequestQueue
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        // Build the JsonArrayRequest to handle a JSON array response from your server
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,  // No request body for GET
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray responseArray) {
+                        try {
+                            // Wrap the JSONArray inside a JSONObject
+                            JSONObject wrapper = new JSONObject();
+                            wrapper.put("movies", responseArray);
+                            // Pass the wrapped JSONObject to the presenter
+                            presenter.onMoviesLoaded(null, wrapper);
+                        } catch (JSONException e) {
+                            try {
+                                presenter.onMoviesLoaded(e, null);
+                            } catch (JSONException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        try {
+                            presenter.onMoviesLoaded(error, null);
+                        } catch (JSONException e) {
+                            try {
+                                presenter.onMoviesLoaded(new Exception("Error parsing JSON"), null);
+                            } catch (JSONException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+                    }
+                }
+        ) {
+            // Add Authorization header with JWT token from SessionManager
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                SessionManager sessionManager = new SessionManager(context);
+                String token = sessionManager.getAuthToken();
+                if (token != null) {
+                    headers.put("Authorization", "Bearer " + token);
+                }
+                return headers;
+            }
+        };
+
+        // Add the request to the RequestQueue to execute it
+        requestQueue.add(jsonArrayRequest);
     }
 
     @Override

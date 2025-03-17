@@ -1,4 +1,4 @@
-package com.example.moviesapp.FindMovies;
+package com.example.moviesapp.FavoriteMovies;
 
 import androidx.annotation.Nullable;
 
@@ -9,8 +9,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public interface FindMoviesContract {
-
+public interface FavoriteMoviesContract {
     interface View {
         void showProgress();
         void hideProgress();
@@ -22,21 +21,14 @@ public interface FindMoviesContract {
     }
 
     interface Presenter {
-        // View Events
-        void onSearchViewTextChanged(String text);
 
         // Model Events
-        void onMoviesLoaded(@Nullable Exception e, @Nullable JSONObject response) throws JSONException;
+        void onFavoriteMoviesLoaded(@Nullable Exception e, @Nullable JSONObject response) throws JSONException;
 
         void onMovieClick(Movie movie);
     }
 
     interface Model {
-        void loadMoviesTMDB();
-
-        void loadMovies();
-
-        void searchMovies(String text);
+        void loadFavoriteMovies();
     }
-
 }

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#212121"
+        >
+
+        <ImageView
+            android:id="@+id/detailedMovieBackdropImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@drawable/sonic_backdrop" />
+
+        <TextView
+            android:id="@+id/detailedMovieNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detailedMovieBackdropImageView"
+            tools:text="Sonic The Movie" />
+
+        <TextView
+            android:id="@+id/detailedMovieDescriptionTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detailedMovieNameTextView"
+            tools:text="Sonic, Knuckles, and Tails reunite against a powerful new adversary—Shadow, a mysterious villain with powers unlike anything they have faced before. With their abilities outmatched in every way, Team Sonic must seek out an unlikely alliance in hopes of stopping Shadow and protecting the planet." />
+
+        <TextView
+            android:id="@+id/detailedMovieYearTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="#E60F0F"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/detailedMovieNameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/detailedMovieNameTextView"
+            tools:text="2022" />
+
+        <ImageView
+            android:id="@+id/detailedMovieStarImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/star_outline"
+            app:layout_constraintBottom_toBottomOf="@+id/detailedMovieYearTextView"
+            app:layout_constraintStart_toEndOf="@+id/detailedMovieYearTextView"
+            app:layout_constraintTop_toTopOf="@+id/detailedMovieYearTextView" />
+
+        <TextView
+            android:id="@+id/detailedMovieRatingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/detailedMovieStarImageView"
+            app:layout_constraintStart_toEndOf="@+id/detailedMovieStarImageView"
+            app:layout_constraintTop_toTopOf="@+id/detailedMovieStarImageView"
+            tools:text="3.5" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/deatiledMovieFavoriteFloatingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:importantForAccessibility="no"
+            android:src="@drawable/heart_unfilled"
+            app:layout_constraintBottom_toBottomOf="@+id/detailedMovieBackdropImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detailedMovieBackdropImageView" />
+
+        <Button
+            android:id="@+id/detailedMovieOrderMovieButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/order_movie"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detailedMovieDescriptionTextView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

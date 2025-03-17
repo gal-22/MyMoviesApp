@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.moviesapp.R;
@@ -69,11 +70,14 @@ public class LoginFragment extends Fragment implements LoginContract.View {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_login, container, false);
         Button loginButton = view.findViewById(R.id.login_button);
-        LoginPresenter loginPresenter = new LoginPresenter(LoginFragment.this);
+        EditText userNameEt = view.findViewById(R.id.editTextTextEmailAddress);
+        EditText passwordEt = view.findViewById(R.id.editTextTextPassword);
+
+        LoginPresenter loginPresenter = new LoginPresenter(LoginFragment.this, getContext());
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginPresenter.onLoginButtonPressed("username", "password");
+                loginPresenter.onLoginButtonPressed(userNameEt.getText().toString(), passwordEt.getText().toString());
             }
         });
 
@@ -95,10 +99,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
 
     }
 
-    @Override
-    public void showLoginError(String message) {
 
-    }
 
     @Override
     public void navigateToHomePage() {

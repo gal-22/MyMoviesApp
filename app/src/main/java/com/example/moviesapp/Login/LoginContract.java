@@ -1,5 +1,7 @@
 package com.example.moviesapp.Login;
 
+import android.content.Context;
+
 import androidx.annotation.Nullable;
 
 import org.json.JSONObject;
@@ -10,7 +12,6 @@ public interface LoginContract {
         void showProgress();
         void hideProgress();
         void showLoginSuccess();
-        void showLoginError(String message);
         void navigateToHomePage();
 
         void showError(String message);
@@ -22,6 +23,6 @@ public interface LoginContract {
     }
 
     interface Model {
-        void login(String username, String password);
+        void login(String username, String password, Context context);
     }
 }

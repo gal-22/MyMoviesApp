@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_loginFragment_to_homePageFragment"
             app:destination="@id/homePageFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_createAccountFragment"
+            app:destination="@id/createAccountFragment" />
     </fragment>
     <fragment
         android:id="@+id/homePageFragment"
@@ -31,12 +34,19 @@
         <action
             android:id="@+id/action_homePageFragment_to_favoriteMoviesFragment"
             app:destination="@id/favoriteMoviesFragment" />
+        <action
+            android:id="@+id/action_homePageFragment_to_userProfileFragment2"
+            app:destination="@id/userProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/findMoviesFragment"
         android:name="com.example.moviesapp.FindMovies.FindMoviesFragment"
         android:label="fragment_find_movies"
-        tools:layout="@layout/fragment_find_movies" />
+        tools:layout="@layout/fragment_find_movies" >
+        <action
+            android:id="@+id/action_findMoviesFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.example.moviesapp.UserProfile.UserProfileFragment"
@@ -52,4 +62,22 @@
         android:name="com.example.moviesapp.FavoriteMovies.FavoriteMoviesFragment"
         android:label="fragment_favorite_movies"
         tools:layout="@layout/fragment_favorite_movies" />
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="com.example.moviesapp.MovieDetails.MovieDetailFragment"
+        android:label="fragment_movie_detail"
+        tools:layout="@layout/fragment_movie_detail" >
+        <argument
+            android:name="movie"
+            app:argType="com.example.moviesapp.ProjectClasses.Movie" />
+    </fragment>
+    <fragment
+        android:id="@+id/createAccountFragment"
+        android:name="com.example.moviesapp.CreateAccount.CreateAccountFragment"
+        android:label="fragment_create_account"
+        tools:layout="@layout/fragment_create_account" >
+        <action
+            android:id="@+id/action_createAccountFragment_to_homePageFragment"
+            app:destination="@id/homePageFragment" />
+    </fragment>
 </navigation>

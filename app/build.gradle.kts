@@ -41,7 +41,9 @@ dependencies {
     implementation(libs.navigation.ui.ktx)
     implementation(libs.core.ktx)
     implementation(libs.volley)
+    implementation(libs.glide)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    annotationProcessor(libs.compiler)
 }

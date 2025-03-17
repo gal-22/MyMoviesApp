@@ -16,12 +16,106 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/findMoviesRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/findMoviesSearchView"
+        app:layout_constraintTop_toBottomOf="@+id/findMoviesGenresConstraints"
         tools:listitem="@layout/movie_slot" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/findMoviesGenresConstraints"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        tools:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findMoviesSearchView">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/findMoviesComedySwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comedy"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/findMoviesAnimationSwitch"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/findMoviesAnimationSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/animation"
+            app:layout_constraintEnd_toStartOf="@+id/findMoviesComedySwitch"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/findMoviesAdventureSwitch"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/findMoviesAdventureSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/adventure"
+            app:layout_constraintEnd_toStartOf="@+id/findMoviesAnimationSwitch"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/findMoviesActionSwitch"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/findMoviesActionSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action"
+            app:layout_constraintEnd_toStartOf="@+id/findMoviesAdventureSwitch"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/findMoviesCrimeSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/crime"
+            app:layout_constraintEnd_toStartOf="@+id/findMoviesDocumentarySwitch"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/findMoviesActionSwitch" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/findMoviesDocumentarySwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/documentary"
+            app:layout_constraintEnd_toStartOf="@+id/findMoviesDramaSwitch"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/findMoviesCrimeSwitch"
+            app:layout_constraintTop_toBottomOf="@+id/findMoviesAdventureSwitch" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/findMoviesDramaSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/drama"
+            app:layout_constraintEnd_toStartOf="@+id/findMoviesFamilySwitch"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/findMoviesDocumentarySwitch"
+            app:layout_constraintTop_toBottomOf="@+id/findMoviesAnimationSwitch" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/findMoviesFamilySwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/family"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/findMoviesDramaSwitch"
+            app:layout_constraintTop_toBottomOf="@+id/findMoviesComedySwitch" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

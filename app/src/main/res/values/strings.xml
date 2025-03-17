@@ -6,4 +6,19 @@
     <string name="favorite_movies">Favorite Movies</string>
     <string name="order_history">Order History</string>
     <string name="find_movies">Find Movies</string>
+    <string name="order_movie">Order Movie</string>
+    <string name="family">Family</string>
+    <string name="drama">Drama</string>
+    <string name="documentary">Documentary</string>
+    <string name="crime">Crime</string>
+    <string name="action">Action</string>
+    <string name="adventure">Adventure</string>
+    <string name="animation">Animation</string>
+    <string name="comedy">Comedy</string>
+    <string name="return_movie">Return Movie</string>
+    <string name="date_rented">Date Rented</string>
+    <string name="return_date">Return Date</string>
+    <string name="favorite_movies_title">Favorite Movies</string>
+    <string name="movies_rented">Movies Rented</string>
+    <string name="log_out">Log Out</string>
 </resources>
