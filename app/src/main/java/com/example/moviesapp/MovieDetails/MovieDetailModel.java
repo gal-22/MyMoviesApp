@@ -1,6 +1,8 @@
 package com.example.moviesapp.MovieDetails;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -9,18 +11,23 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.moviesapp.MovieDetails.MovieDetailContract;
 import com.example.moviesapp.ProjectClasses.Movie;
 import com.example.moviesapp.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class MovieDetailModel implements MovieDetailContract.Model {
 
+    private static final String TAG = "MovieDetailModel";
     private Movie movie;
     private Context context;
     private RequestQueue requestQueue;
@@ -145,6 +152,144 @@ public class MovieDetailModel implements MovieDetailContract.Model {
             }
         };
 
+        requestQueue.add(request);
+    }
+
+    @Override
+    public void getRentalStatus() {
+        // Get the user's rental history
+        String url = "http://10.0.2.2:8080/api/rentals/history";
+
+        JsonArrayRequest request = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            boolean isRented = false;
+                            String returnDate = null;
+
+                            // Loop through rentals to find the current movie
+                            for (int i = 0; i < response.length(); i++) {
+                                JSONObject rental = response.getJSONObject(i);
+                                JSONObject movieObj = rental.getJSONObject("movie");
+
+                                if (movieObj.getLong("id") == movie.getId()) {
+                                    // Check if return date is null (still rented)
+                                    if (rental.isNull("returnDate")) {
+                                        isRented = true;
+
+                                        // Calculate expected return date (rental date + 3 days)
+                                        String rentalDate = rental.getString("rentalDate");
+                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+                                        try {
+                                            Date date = sdf.parse(rentalDate);
+                                            // Add 3 days (72 hours) to rental date
+                                            Date dueDate = new Date(date.getTime() + (3 * 24 * 60 * 60 * 1000));
+                                            SimpleDateFormat displayFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+                                            returnDate = displayFormat.format(dueDate);
+                                        } catch (ParseException e) {
+                                            Log.e(TAG, "Error parsing date", e);
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // Notify presenter about rental status
+                            presenter.onRentalStatusLoaded(isRented, returnDate);
+
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Error parsing rental history", e);
+                            presenter.onError("Error checking rental status: " + e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "Network error getting rental history", error);
+                        presenter.onError("Network error checking rental status");
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                SessionManager sessionManager = new SessionManager(context);
+                String token = sessionManager.getAuthToken();
+                if (token != null) {
+                    headers.put("Authorization", "Bearer " + token);
+                }
+                return headers;
+            }
+        };
+
+        requestQueue.add(request);
+    }
+
+    @Override
+    public void rentMovie() {
+        // Use the POST /api/rentals/{movieId} endpoint to rent a movie
+        String url = "http://10.0.2.2:8080/api/rentals/rent/" + movie.getId();
+
+
+        // Create a new request, matching the pattern of changeMovieFavoriteStatus which works
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                null,  // No request body
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String message = response.optString("message", "Movie rented successfully");
+                            boolean success = !message.toLowerCase().contains("error");
+
+                            // Notify presenter about rental result
+                            presenter.onRentalCompleted(success, message);
+
+                            // If successful, update rental status
+                            if (success) {
+                                getRentalStatus();
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing rental response", e);
+                            presenter.onError("Error processing rental: " + e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "Network error renting movie", error);
+
+                        // Get error message
+                        String errorMessage = "Network error renting movie";
+                        if (error.networkResponse != null) {
+                            errorMessage += " (Status code: " + error.networkResponse.statusCode + ")";
+                        }
+
+                        presenter.onError(errorMessage);
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                SessionManager sessionManager = new SessionManager(context);
+                String token = sessionManager.getAuthToken();
+                if (token != null) {
+                    headers.put("Authorization", "Bearer " + token);
+                }
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        // Add the request to the RequestQueue
         requestQueue.add(request);
     }
 }

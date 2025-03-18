@@ -7,43 +7,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
-import com.example.moviesapp.FindMovies.FindMoviesFragment;
-import com.example.moviesapp.FindMovies.FindMoviesPresenter;
 import com.example.moviesapp.ProjectClasses.Movie;
 import com.example.moviesapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link MovieDetailFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Movie detail fragment showing movie information and rental options
  */
 public class MovieDetailFragment extends Fragment implements MovieDetailContract.View {
 
-
-    // These arguments are placeholders if you need them for other things.
-    // You can remove them if you don't need them.
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_MOVIE = "movie";
 
     private String mParam1;
     private String mParam2;
-
-    // Key used to retrieve the Movie from the Bundle
-    // (either from Safe Args or manually).
-    private static final String ARG_MOVIE = "movie";
-
     private Movie movie;
     private View rootView;
 
+    // UI components
     private ImageView posterImageView;
     private TextView movieNameTextView;
     private TextView movieRatingTextView;
     private TextView movieReleaseDateTextView;
     private TextView movieDescriptionTextView;
     private Button orderMovieButton;
+    private TextView rentalStatusTextView;
+    private ProgressBar progressBar;
     private FloatingActionButton favoriteMovieButton;
 
     private MovieDetailPresenter movieDetailPresenter;
@@ -52,11 +47,6 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of this fragment using
-     * the provided parameters. If you are passing the Movie via Safe Args
-     * or directly via a Bundle, you may not need these parameters.
-     */
     public static MovieDetailFragment newInstance(String param1, String param2) {
         MovieDetailFragment fragment = new MovieDetailFragment();
         Bundle args = new Bundle();
@@ -66,10 +56,6 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
         return fragment;
     }
 
-    /**
-     * If you are manually creating the fragment and passing the Movie object in code,
-     * you can do it like this instead of the above factory method:
-     */
     public static MovieDetailFragment newInstance(Movie movie) {
         MovieDetailFragment fragment = new MovieDetailFragment();
         Bundle args = new Bundle();
@@ -82,15 +68,9 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Retrieve the fragment arguments
         if (getArguments() != null) {
-            // If you used newInstance(param1, param2)
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-
-            // If you put the Movie object directly in the Bundle
-            // (or if you used Safe Args, you would do something like
-            // MovieDetailFragmentArgs.fromBundle(getArguments()).getMovie())
             movie = getArguments().getParcelable(ARG_MOVIE);
         }
     }
@@ -98,10 +78,10 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment one time, keep it in rootView
+        // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-        movieDetailPresenter = new MovieDetailPresenter(MovieDetailFragment.this, getContext(), movie);
-        // Find your views
+
+        // Find all views
         posterImageView = rootView.findViewById(R.id.detailedMovieBackdropImageView);
         movieNameTextView = rootView.findViewById(R.id.detailedMovieNameTextView);
         movieRatingTextView = rootView.findViewById(R.id.detailedMovieRatingTextView);
@@ -109,12 +89,28 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
         movieDescriptionTextView = rootView.findViewById(R.id.detailedMovieDescriptionTextView);
         orderMovieButton = rootView.findViewById(R.id.detailedMovieOrderMovieButton);
         favoriteMovieButton = rootView.findViewById(R.id.deatiledMovieFavoriteFloatingButton);
+
+        // Create or find the rental status TextView
+        rentalStatusTextView = rootView.findViewById(R.id.movieDateTextView);
+
+        // Set up click listeners
         favoriteMovieButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 movieDetailPresenter.onFavoriteButtonClick();
             }
         });
+
+        orderMovieButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movieDetailPresenter.onOrderButtonClick();
+            }
+        });
+
+        // Initialize presenter
+        movieDetailPresenter = new MovieDetailPresenter(this, getContext(), movie);
+
         // Populate the views if we have a valid Movie object
         if (movie != null) {
             String backdropUrl = "https://image.tmdb.org/t/p/original" + movie.getBackdropPath();
@@ -130,27 +126,72 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
             movieDescriptionTextView.setText(movie.getDescription());
         }
 
-        // Return the inflated and populated view
         return rootView;
     }
 
     @Override
     public void showProgress() {
-
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void hideProgress() {
-
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void showMessage(String message) {
-
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void setFavoriteButton(Boolean isFilled) {
         favoriteMovieButton.setImageResource(isFilled ? R.drawable.heart_filled : R.drawable.heart_unfilled);
+    }
+
+    @Override
+    public void showOrderButton() {
+        if (orderMovieButton != null) {
+            orderMovieButton.setVisibility(View.VISIBLE);
+            orderMovieButton.setText(R.string.order_movie);
+            orderMovieButton.setEnabled(true);
+        }
+
+        if (rentalStatusTextView != null) {
+            rentalStatusTextView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void showRentedUntil(String returnDate) {
+        if (orderMovieButton != null) {
+            orderMovieButton.setVisibility(View.GONE);
+        }
+
+        if (rentalStatusTextView != null) {
+            rentalStatusTextView.setVisibility(View.VISIBLE);
+            rentalStatusTextView.setText(getString(R.string.rented_until, returnDate));
+        } else {
+            // If the TextView is not in layout, show a toast as fallback
+            Toast.makeText(getContext(),
+                    getString(R.string.rented_until, returnDate),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void updateOrderButtonState(boolean isRenting) {
+        if (orderMovieButton != null) {
+            orderMovieButton.setEnabled(!isRenting);
+            if (isRenting) {
+                orderMovieButton.setText(R.string.ordering);
+            } else {
+                orderMovieButton.setText(R.string.order_movie);
+            }
+        }
     }
 }

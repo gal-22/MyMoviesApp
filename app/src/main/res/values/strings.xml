@@ -21,4 +21,8 @@
     <string name="favorite_movies_title">Favorite Movies</string>
     <string name="movies_rented">Movies Rented</string>
     <string name="log_out">Log Out</string>
+    <string name="ordering">Ordering…</string>
+    <string name="rented_until">Rented until %s</string>
+    <string name="rental_error">Error renting movie</string>
+    <string name="rental_success">Movie rented successfully</string>
 </resources>
