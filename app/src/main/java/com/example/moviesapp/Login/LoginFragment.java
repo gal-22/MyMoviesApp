@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.moviesapp.R;
@@ -72,6 +73,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
         Button loginButton = view.findViewById(R.id.login_button);
         EditText userNameEt = view.findViewById(R.id.editTextTextEmailAddress);
         EditText passwordEt = view.findViewById(R.id.editTextTextPassword);
+        TextView signUpTextView = view.findViewById(R.id.dontHaveAccountTextView);
 
         LoginPresenter loginPresenter = new LoginPresenter(LoginFragment.this, getContext());
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +83,12 @@ public class LoginFragment extends Fragment implements LoginContract.View {
             }
         });
 
+        signUpTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToSignUp();
+            }
+        });
         return view;
     }
 
@@ -117,4 +125,13 @@ public class LoginFragment extends Fragment implements LoginContract.View {
             new Handler(Looper.getMainLooper()).postDelayed(toast::cancel, 1000); // 1 second delay
         }
     }
+
+    @Override
+    public void navigateToSignUp() {
+        Navigation.findNavController(view).navigate(
+                R.id.action_loginFragment_to_createAccountFragment
+        );
+    }
+
+
 }

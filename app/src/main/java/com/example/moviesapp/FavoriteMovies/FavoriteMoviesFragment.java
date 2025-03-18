@@ -1,21 +1,32 @@
 package com.example.moviesapp.FavoriteMovies;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.moviesapp.Adapters.FavoriteMoviesAdapter;
+import com.example.moviesapp.ProjectClasses.Movie;
 import com.example.moviesapp.R;
 
+import java.util.ArrayList;
+
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link FavoriteMoviesFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment to display user's favorite movies
  */
-public class FavoriteMoviesFragment extends Fragment {
+public class FavoriteMoviesFragment extends Fragment implements FavoriteMoviesContract.View {
+
+    // Keep a reference to UI components
+    private RecyclerView recyclerView;
+    private FavoriteMoviesAdapter adapter;
+    private View rootView;
+    private FavoriteMoviesPresenter favoriteMoviesPresenter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +72,80 @@ public class FavoriteMoviesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite_movies, container, false);
+        rootView = inflater.inflate(R.layout.fragment_favorite_movies, container, false);
+
+        // Find RecyclerView
+        recyclerView = rootView.findViewById(R.id.favoriteMoviesRecycler);
+
+        // Set up RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Initialize adapter with click listener for movie items
+        adapter = new FavoriteMoviesAdapter(getContext(), new ArrayList<>(), new FavoriteMoviesAdapter.OnMovieClickListener() {
+            @Override
+            public void onMovieClick(Movie movie) {
+                favoriteMoviesPresenter.onMovieClick(movie);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+        // Create presenter and load data
+        favoriteMoviesPresenter = new FavoriteMoviesPresenter(this, getContext());
+
+        // Show loading initially
+        showProgress();
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Refresh data when returning to this fragment
+        favoriteMoviesPresenter.refreshFavorites();
+    }
+
+    @Override
+    public void showProgress() {
+        // No progress indicator in this layout
+    }
+
+    @Override
+    public void hideProgress() {
+        // No progress indicator in this layout
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void initializeRecyclerView(ArrayList<Movie> movies) {
+        adapter = new FavoriteMoviesAdapter(getContext(), movies, new FavoriteMoviesAdapter.OnMovieClickListener() {
+            @Override
+            public void onMovieClick(Movie movie) {
+                favoriteMoviesPresenter.onMovieClick(movie);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+        // If you want to add an empty state message, you could add a TextView to your layout
+        // and toggle its visibility here
+    }
+
+    @Override
+    public void updateRecyclerView(ArrayList<Movie> movies) {
+        adapter.updateMovies(movies);
+    }
+
+    @Override
+    public void navigateToMovieDetails(Movie movie) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("movie", movie);
+        Navigation.findNavController(rootView).navigate(
+                R.id.action_favoriteMoviesFragment_to_movieDetailFragment,
+                bundle
+        );
     }
 }

@@ -15,6 +15,8 @@ public interface LoginContract {
         void navigateToHomePage();
 
         void showError(String message);
+
+        void navigateToSignUp();
     }
 
     interface Presenter {
