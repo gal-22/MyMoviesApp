@@ -56,7 +56,11 @@
         android:id="@+id/orderHistory"
         android:name="com.example.moviesapp.OrderHistory.OrderHistory"
         android:label="fragment_order_history"
-        tools:layout="@layout/fragment_order_history" />
+        tools:layout="@layout/fragment_order_history" >
+        <action
+            android:id="@+id/action_orderHistory_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoriteMoviesFragment"
         android:name="com.example.moviesapp.FavoriteMovies.FavoriteMoviesFragment"

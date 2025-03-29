@@ -75,4 +75,42 @@ public class MovieParser {
 
         return movies;
     }
+
+    public static ArrayList<Movie> parseOrderHistoryMovies(JSONArray jsonArray) throws JSONException {
+        ArrayList<Movie> movies = new ArrayList<>();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject wrapper = jsonArray.getJSONObject(i);
+
+            // Extract the movie object inside "movie" key
+            JSONObject movieJson = wrapper.optJSONObject("movie");
+            if (movieJson == null) continue;
+
+            Movie movie = new Movie();
+
+            movie.setTMDBId(movieJson.optInt("tmdbId", 0));
+            movie.setId(movieJson.optInt("id", 0));
+            movie.setRate(movieJson.optDouble("voteAverage", 0.0));
+            movie.setReleaseDate(movieJson.optString("releaseDate", ""));
+            movie.setName(movieJson.optString("title", ""));
+            movie.setDescription(movieJson.optString("overview", ""));
+
+            // Parse genreIds
+            List<Integer> genreIds = new ArrayList<>();
+            JSONArray genreArray = movieJson.optJSONArray("genreIds");
+            if (genreArray != null) {
+                for (int j = 0; j < genreArray.length(); j++) {
+                    genreIds.add(genreArray.optInt(j));
+                }
+            }
+            movie.setGenreIds(genreIds);
+
+            movie.setPosterPath(movieJson.optString("posterPath", ""));
+            movie.setBackdropPath(movieJson.optString("backdropPath", ""));
+
+            movies.add(movie);
+        }
+
+        return movies;
+    }
 }
