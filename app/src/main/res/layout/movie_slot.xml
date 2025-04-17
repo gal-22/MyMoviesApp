@@ -105,4 +105,16 @@
         app:layout_constraintTop_toBottomOf="@+id/movieSlotYearTv"
         app:layout_constraintVertical_bias="0.0"
         tools:text="Hidden away among towering, snow-clad mountains, the Peakview Research Station is known for its groundbreaking weather and climate studies. Led by the pragmatic Dr. Anna Clark, the team arrives each autumn to record crucial data before the harsh winter closes in. But after an unexpected avalanche destroys their only communication link, the scientists find themselves completely cut off from civilization.  As the oxygen-deprived environment starts to take its toll, hallucinations and paranoia begin to creep in. Tension flares when a young researcher claims to have seen a figure wandering outside—impossible, given the dangerous conditions. When supplies start disappearing, loyalties fracture, and each scientist suspects the other of sabotage.  Desperate to discern reality from illusion, Dr. Clark discovers evidence suggesting someone—or something—has been manipulating conditions at Peakview from the start. Forced to confront both the brutal power of nature and the fragile boundaries of the human mind, the team races against time to uncover the truth. Their only hope for survival lies in unearthing what truly waits beyond the station walls—and why it seems determined to keep them at high altitude for good." />
+
+    <TextView
+        android:id="@+id/dueDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:textColor="#EFEFEF"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/MovieSlotRankTv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/MovieSlotRankTv"
+        tools:text="Return: 1.1.25" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -43,6 +43,8 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
 
     private MovieDetailPresenter movieDetailPresenter;
 
+    private TextView movieDateTextView;
+
     public MovieDetailFragment() {
         // Required empty public constructor
     }
@@ -87,7 +89,7 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
         movieRatingTextView = rootView.findViewById(R.id.detailedMovieRatingTextView);
         movieReleaseDateTextView = rootView.findViewById(R.id.detailedMovieYearTextView);
         movieDescriptionTextView = rootView.findViewById(R.id.detailedMovieDescriptionTextView);
-        orderMovieButton = rootView.findViewById(R.id.detailedMovieOrderMovieButton);
+        orderMovieButton = rootView.findViewById(R.id.detailedMovieOrderOrReturnMovieButton);
         favoriteMovieButton = rootView.findViewById(R.id.deatiledMovieFavoriteFloatingButton);
 
         // Create or find the rental status TextView
@@ -154,32 +156,15 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
     }
 
     @Override
-    public void showOrderButton() {
-        if (orderMovieButton != null) {
-            orderMovieButton.setVisibility(View.VISIBLE);
-            orderMovieButton.setText(R.string.order_movie);
-            orderMovieButton.setEnabled(true);
-        }
-
-        if (rentalStatusTextView != null) {
-            rentalStatusTextView.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void showRentedUntil(String returnDate) {
-        if (orderMovieButton != null) {
-            orderMovieButton.setVisibility(View.GONE);
-        }
-
+    public void showMovieIsRented(Boolean isRentedByUser) {
         if (rentalStatusTextView != null) {
             rentalStatusTextView.setVisibility(View.VISIBLE);
-            rentalStatusTextView.setText(getString(R.string.rented_until, returnDate));
-        } else {
-            // If the TextView is not in layout, show a toast as fallback
-            Toast.makeText(getContext(),
-                    getString(R.string.rented_until, returnDate),
-                    Toast.LENGTH_LONG).show();
+            if (isRentedByUser) {
+                rentalStatusTextView.setText(R.string.the_movie_is_rented_by_user);
+            } else {
+                rentalStatusTextView.setText(R.string.the_movie_is_already_rented);
+
+            }
         }
     }
 
@@ -193,5 +178,15 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
                 orderMovieButton.setText(R.string.order_movie);
             }
         }
+    }
+
+    @Override
+    public void setOrderButtonText(String buttonText) {
+        orderMovieButton.setText(buttonText);
+    }
+
+    @Override
+    public void showReturnText(Boolean show) {
+        rentalStatusTextView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
     }
 }

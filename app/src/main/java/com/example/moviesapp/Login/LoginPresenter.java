@@ -29,35 +29,33 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void onLoginLoadCompleted(Exception error, JSONObject response) {
+        // First, hide your loading indicator
+        loginView.hideProgress();
+
         if (error != null) {
-            // Handle network or unexpected errors
+            // Network or unexpected error
             loginView.showError(error.getMessage());
             return;
         }
 
         try {
-            // Check if the response contains a token (indicating a successful login)
+            // Check for token success
             if (response.has("token")) {
                 String token = response.getString("token");
                 JSONObject user = response.getJSONObject("user");
                 String username = user.getString("username");
-                String email = user.getString("email");
-                if (token != null && !token.isEmpty()) {
-                    // Save the token using SessionManager
-                    SessionManager sessionManager = new SessionManager(context);
-                    sessionManager.saveSession(token, username, email);
-                    loginView.navigateToHomePage();
-                } else {
-                    // If token is empty, fall back to checking for an error message
-                    String errorMsg = response.optString("message", "Login failed without a proper error message.");
-                    loginView.showError(errorMsg);
-                }
+                String email    = user.getString("email");
+
+                // Save session and navigate
+                SessionManager sessionManager = new SessionManager(context);
+                sessionManager.saveSession(token, username, email);
+                loginView.navigateToHomePage();
+
             } else if (response.has("message")) {
-                // No token was returned, so extract and display the error message
-                String errorMsg = response.getString("message");
-                loginView.showError(errorMsg);
+                // Server-side “bad credentials” or other msg
+                loginView.showError(response.getString("message"));
             } else {
-                // Fallback error if neither token nor message is present
+                // Fallback
                 loginView.showError("Unknown error occurred during login.");
             }
         } catch (JSONException e) {

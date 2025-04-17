@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
+import com.example.moviesapp.SessionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,15 +66,21 @@ public class CreateAccountPresenter implements CreateAccountContract.Presenter {
             return;
         }
 
-        if (response != null) {
+        else if (response != null) {
             try {
                 // Check for success message or token in response
                 String token = response.optString("token", null);
                 String message = response.optString("message", "Account created successfully!");
 
                 if (token != null) {
-                    // If token is returned, registration was successful
                     createAccountView.showSuccess(message);
+
+                    String username = response.optString("username", "");
+                    String email    = response.optString("email", "");
+
+                    // Save the session & move to login
+                    SessionManager sessionManager = new SessionManager(context);
+                    sessionManager.saveSession(token, username, email);
                     createAccountView.navigateToLogin();
                 } else {
                     // Check if there's an error message
@@ -81,8 +88,7 @@ public class CreateAccountPresenter implements CreateAccountContract.Presenter {
                     if (errorMessage != null) {
                         createAccountView.showError(errorMessage);
                     } else {
-                        createAccountView.showSuccess(message);
-                        createAccountView.navigateToLogin();
+                        createAccountView.showError("Account is already registered or created successfully, but no token was returned.");
                     }
                 }
             } catch (Exception jsonException) {

@@ -63,20 +63,22 @@ public class FindMoviesPresenter implements FindMoviesContract.Presenter{
             selectedGenres.add(categoryId);
 
             // Filter movies that contain at least one of the selectedGenres
-            ArrayList<Movie> filteredMovies = movies.stream()
-                    .filter(m -> {
-                        for (int genreId : m.getGenreIds()) {
-                            if (selectedGenres.contains(genreId)) {
-                                return true;
+            if (movies != null) {
+                ArrayList<Movie> filteredMovies = movies.stream()
+                        .filter(m -> {
+                            for (int genreId : m.getGenreIds()) {
+                                if (selectedGenres.contains(genreId)) {
+                                    return true;
+                                }
                             }
-                        }
-                        return false;
-                    })
-                    // Collect into an ArrayList instead of a generic List
-                    .collect(Collectors.toCollection(ArrayList::new));
+                            return false;
+                        })
+                        // Collect into an ArrayList instead of a generic List
+                        .collect(Collectors.toCollection(ArrayList::new));
 
-            // Update the RecyclerView with filtered movies
-            findMoviesView.updateRecyclerView(filteredMovies);
+                // Update the RecyclerView with filtered movies
+                findMoviesView.updateRecyclerView(filteredMovies);
+            }
         } else {
             // Remove the unselected genre
             selectedGenres.remove(Integer.valueOf(categoryId));

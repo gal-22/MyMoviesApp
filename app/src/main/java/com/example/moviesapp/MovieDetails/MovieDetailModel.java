@@ -180,26 +180,13 @@ public class MovieDetailModel implements MovieDetailContract.Model {
                                     // Check if return date is null (still rented)
                                     if (rental.isNull("returnDate")) {
                                         isRented = true;
-
-                                        // Calculate expected return date (rental date + 3 days)
-                                        String rentalDate = rental.getString("rentalDate");
-                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
-                                        try {
-                                            Date date = sdf.parse(rentalDate);
-                                            // Add 3 days (72 hours) to rental date
-                                            Date dueDate = new Date(date.getTime() + (3 * 24 * 60 * 60 * 1000));
-                                            SimpleDateFormat displayFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-                                            returnDate = displayFormat.format(dueDate);
-                                        } catch (ParseException e) {
-                                            Log.e(TAG, "Error parsing date", e);
-                                        }
                                         break;
                                     }
                                 }
                             }
 
                             // Notify presenter about rental status
-                            presenter.onRentalStatusLoaded(isRented, returnDate);
+                            presenter.onRentalStatusLoaded(isRented);
 
                         } catch (JSONException e) {
                             Log.e(TAG, "Error parsing rental history", e);
@@ -250,11 +237,6 @@ public class MovieDetailModel implements MovieDetailContract.Model {
 
                             // Notify presenter about rental result
                             presenter.onRentalCompleted(success, message);
-
-                            // If successful, update rental status
-                            if (success) {
-                                getRentalStatus();
-                            }
                         } catch (Exception e) {
                             Log.e(TAG, "Error parsing rental response", e);
                             presenter.onError("Error processing rental: " + e.getMessage());
@@ -268,6 +250,61 @@ public class MovieDetailModel implements MovieDetailContract.Model {
 
                         // Get error message
                         String errorMessage = "Network error renting movie";
+                        if (error.networkResponse != null) {
+                            errorMessage += " (Status code: " + error.networkResponse.statusCode + ")";
+                        }
+
+                        presenter.onError(errorMessage);
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                SessionManager sessionManager = new SessionManager(context);
+                String token = sessionManager.getAuthToken();
+                if (token != null) {
+                    headers.put("Authorization", "Bearer " + token);
+                }
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        // Add the request to the RequestQueue
+        requestQueue.add(request);
+    }
+
+    public void returnMovie() {
+        // Use the POST /api/rentals/return/{movieId} endpoint to return a movie
+        String url = "http://10.0.2.2:8080/api/rentals/return/" + movie.getId();
+
+        // Create a new request
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                null,  // No request body
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String message = response.optString("message", "Movie returned successfully");
+                            boolean success = !message.toLowerCase().contains("error");
+
+                            // Notify presenter about return result
+                            presenter.onReturnCompleted(success, message);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing return response", e);
+                            presenter.onError("Error processing return: " + e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "Network error returning movie", error);
+
+                        String errorMessage = "Network error returning movie";
                         if (error.networkResponse != null) {
                             errorMessage += " (Status code: " + error.networkResponse.statusCode + ")";
                         }

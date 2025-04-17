@@ -47,20 +47,25 @@ public class MovieParser {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject movieJson = jsonArray.getJSONObject(i);
 
-            // Create and populate the Movie object
             Movie movie = new Movie();
 
-            // Using the camelCase keys from your JSON
-            movie.setTMDBId(movieJson.optInt("tmdbId", 0)); // if you need to store tmdbId
+            movie.setTMDBId(movieJson.optInt("tmdbId", 0));
             movie.setId(movieJson.optInt("id", 0));
             movie.setRate(movieJson.optDouble("voteAverage", 0.0));
             movie.setReleaseDate(movieJson.optString("releaseDate", ""));
             movie.setName(movieJson.optString("title", ""));
             movie.setDescription(movieJson.optString("overview", ""));
+            movie.setPosterPath(movieJson.optString("posterPath", ""));
+            movie.setBackdropPath(movieJson.optString("backdropPath", ""));
 
-            // Parse the "genre_ids" if available (not in your sample, so this may remain empty)
+            // Boolean fields
+            movie.setFavorite(movieJson.optBoolean("favorite", false));
+            movie.setRented(movieJson.optBoolean("rented", false));
+            movie.setRentedByUser(movieJson.optBoolean("rentedByUser", false));
+
+            // Genre IDs
             List<Integer> genreIds = new ArrayList<>();
-            JSONArray genreArray = movieJson.optJSONArray("genreIds"); // From TMDB it is called "genre_ids"
+            JSONArray genreArray = movieJson.optJSONArray("genreIds");
             if (genreArray != null) {
                 for (int j = 0; j < genreArray.length(); j++) {
                     genreIds.add(genreArray.optInt(j));
@@ -68,8 +73,6 @@ public class MovieParser {
             }
             movie.setGenreIds(genreIds);
 
-            movie.setPosterPath(movieJson.optString("posterPath", ""));
-            movie.setBackdropPath(movieJson.optString("backdropPath", ""));
             movies.add(movie);
         }
 

@@ -1,14 +1,5 @@
 package com.example.moviesapp.MovieDetails;
 
-import androidx.annotation.Nullable;
-import com.example.moviesapp.ProjectClasses.Movie;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Date;
-
 public interface MovieDetailContract {
 
     interface View {
@@ -18,9 +9,12 @@ public interface MovieDetailContract {
         void setFavoriteButton(Boolean isFilled);
 
         // New methods for rental functionality
-        void showOrderButton();
-        void showRentedUntil(String returnDate);
+        void showMovieIsRented(Boolean isRentedByUser);
         void updateOrderButtonState(boolean isRenting);
+
+        void setOrderButtonText(String orderMovie);
+
+        void showReturnText(Boolean show);
     }
 
     interface Presenter {
@@ -31,9 +25,10 @@ public interface MovieDetailContract {
 
         // New methods for rental functionality
         void onOrderButtonClick();
-        void checkRentalStatus();
-        void onRentalStatusLoaded(boolean isRented, @Nullable String returnDate);
+        void onRentalStatusLoaded(boolean isRented);
         void onRentalCompleted(boolean success, String message);
+
+        void onReturnCompleted(boolean success, String message);
     }
 
     interface Model {
@@ -43,5 +38,6 @@ public interface MovieDetailContract {
         // New methods for rental functionality
         void getRentalStatus();
         void rentMovie();
+        void returnMovie();
     }
 }

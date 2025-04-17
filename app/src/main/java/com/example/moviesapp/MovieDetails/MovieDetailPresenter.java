@@ -10,19 +10,20 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
     private Movie movie;
     private MovieDetailContract.View movieDetailView;
     private MovieDetailContract.Model movieDetailModel;
-    private Context context;
 
     public MovieDetailPresenter(MovieDetailContract.View movieDetailView, Context context, Movie movie) {
         this.movieDetailView = movieDetailView;
         this.movieDetailModel = new MovieDetailModel(context, movie, this);
-        this.context = context;
         this.movie = movie;
-
-        // Check favorite status
-        movieDetailModel.getFavoriteStatus();
-
-        // Check rental status
-        checkRentalStatus();
+        movieDetailView.setFavoriteButton(movie.isFavorite());
+        if (movie.isRented()) {
+            movieDetailView.showMovieIsRented(movie.isRentedByUser());
+            movieDetailView.setOrderButtonText("Return Movie");
+            movieDetailView.showReturnText(true);
+        } else {
+            movieDetailView.setOrderButtonText("Order Movie");
+            movieDetailView.showReturnText(false);
+        }
     }
 
     @Override
@@ -48,22 +49,20 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     // New rental-related methods
 
-    @Override
-    public void checkRentalStatus() {
-        movieDetailView.showProgress();
-        movieDetailModel.getRentalStatus();
-    }
+
 
     @Override
-    public void onRentalStatusLoaded(boolean isRented, String returnDate) {
+    public void onRentalStatusLoaded(boolean isRented) {
         movieDetailView.hideProgress();
 
         if (isRented) {
             // If the movie is currently rented, show the return date
-            movieDetailView.showRentedUntil(returnDate);
+            movieDetailView.showMovieIsRented(movie.isRentedByUser());
+            movieDetailView.setOrderButtonText("Return Movie");
+
         } else {
             // If the movie is not rented, show the order button
-            movieDetailView.showOrderButton();
+            movieDetailView.setOrderButtonText("Order Movie");
         }
     }
 
@@ -72,7 +71,11 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         // User clicked the order button, start rental process
         movieDetailView.showProgress();
         movieDetailView.updateOrderButtonState(true); // Disable button while processing
-        movieDetailModel.rentMovie();
+        if (movie.isRented()) {
+            movieDetailModel.returnMovie();
+        } else {
+            movieDetailModel.rentMovie();
+        }
     }
 
     @Override
@@ -80,11 +83,28 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         movieDetailView.hideProgress();
         movieDetailView.updateOrderButtonState(false); // Re-enable button
         movieDetailView.showMessage(message);
-
         // If rental was successful, update UI
         if (success) {
-            // The rental status will be updated by a separate call to getRentalStatus()
-            // which is triggered in the model after successful rental
+            this.movie.setRentedByUser(true);
+            this.movie.setRented(true);
+            movieDetailView.showReturnText(true);
+            movieDetailView.showMovieIsRented(true);
+            movieDetailView.setOrderButtonText("Return Movie");
+        }
+    }
+
+    @Override
+    public void onReturnCompleted(boolean success, String message) {
+        movieDetailView.hideProgress();
+        movieDetailView.updateOrderButtonState(false); // Re-enable button
+        movieDetailView.showMessage(message);
+
+        // If return was successful, update UI
+        if (success) {
+            this.movie.setRentedByUser(false);
+            this.movie.setRented(false);
+            movieDetailView.showReturnText(false);
+            movieDetailView.setOrderButtonText("Order Movie");
         }
     }
 }

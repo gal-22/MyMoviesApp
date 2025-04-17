@@ -119,10 +119,12 @@ public class LoginFragment extends Fragment implements LoginContract.View {
     @Override
     public void showError(String message) {
         Context context = getContext();
-        if (context != null) {
+        if (context != null && message != null) {
             Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
             toast.show();
             new Handler(Looper.getMainLooper()).postDelayed(toast::cancel, 1000); // 1 second delay
+        } else if (context != null) {
+            Toast.makeText(context, "Error occured loggin in", Toast.LENGTH_SHORT).show();
         }
     }
 
