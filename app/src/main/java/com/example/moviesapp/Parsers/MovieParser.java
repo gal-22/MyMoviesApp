@@ -83,12 +83,7 @@ public class MovieParser {
         ArrayList<Movie> movies = new ArrayList<>();
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject wrapper = jsonArray.getJSONObject(i);
-
-            // Extract the movie object inside "movie" key
-            JSONObject movieJson = wrapper.optJSONObject("movie");
-            if (movieJson == null) continue;
-
+            JSONObject movieJson = jsonArray.getJSONObject(i);
             Movie movie = new Movie();
 
             movie.setTMDBId(movieJson.optInt("tmdbId", 0));
@@ -97,6 +92,9 @@ public class MovieParser {
             movie.setReleaseDate(movieJson.optString("releaseDate", ""));
             movie.setName(movieJson.optString("title", ""));
             movie.setDescription(movieJson.optString("overview", ""));
+            movie.setFavorite(movieJson.optBoolean("favorite", false));
+            movie.setRented(movieJson.optBoolean("rented", false));
+            movie.setRentedByUser(movieJson.optBoolean("rentedByUser", false));
 
             // Parse genreIds
             List<Integer> genreIds = new ArrayList<>();

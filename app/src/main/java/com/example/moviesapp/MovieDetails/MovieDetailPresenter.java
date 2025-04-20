@@ -16,6 +16,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
         this.movieDetailModel = new MovieDetailModel(context, movie, this);
         this.movie = movie;
         movieDetailView.setFavoriteButton(movie.isFavorite());
+        movieDetailView.showOrderButton(!movie.isRented() || movie.isRentedByUser());
         if (movie.isRented()) {
             movieDetailView.showMovieIsRented(movie.isRentedByUser());
             movieDetailView.setOrderButtonText("Return Movie");

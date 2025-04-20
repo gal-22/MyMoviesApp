@@ -34,7 +34,7 @@ public class OrderHistoryModel implements OrderHistoryContract.Model {
     @Override
     public void loadOrderHistory() {
         // API endpoint for rental history
-        String url = "http://10.0.2.2:8080/api/rentals/history";
+        String url = "http://10.0.2.2:8080/api/rentals/history/movies";
         Log.d(TAG, "Loading rental history from: " + url);
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(

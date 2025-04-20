@@ -186,6 +186,15 @@ public class MovieDetailFragment extends Fragment implements MovieDetailContract
     }
 
     @Override
+    public void showOrderButton(boolean show) {
+        if (show) {
+            orderMovieButton.setVisibility(View.VISIBLE);
+        } else {
+            orderMovieButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
     public void showReturnText(Boolean show) {
         rentalStatusTextView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
     }

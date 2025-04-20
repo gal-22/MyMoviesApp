@@ -14,6 +14,7 @@ public interface MovieDetailContract {
 
         void setOrderButtonText(String orderMovie);
 
+        void showOrderButton(boolean show);
         void showReturnText(Boolean show);
     }
 
