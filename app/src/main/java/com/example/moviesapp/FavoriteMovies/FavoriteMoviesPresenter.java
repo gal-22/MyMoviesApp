@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class FavoriteMoviesPresenter implements FavoriteMoviesContract.Presenter {
     private FavoriteMoviesContract.View favoriteMoviesView;
@@ -22,11 +23,11 @@ public class FavoriteMoviesPresenter implements FavoriteMoviesContract.Presenter
         this.favoriteMoviesView = favoriteMoviesView;
         this.favoriteMoviesModel = new FavoriteMoviesModel(this, context);
         // Load favorite movies immediately
-        this.favoriteMoviesModel.loadFavoriteMovies();
+        this.favoriteMoviesModel.loadMovies();
     }
 
     @Override
-    public void onFavoriteMoviesLoaded(@Nullable Exception e, @Nullable JSONObject response) throws JSONException {
+    public void onLoadMoviesLoaded(@Nullable Exception e, @Nullable JSONObject response) throws JSONException {
         if (e != null) {
             // Handle error
             favoriteMoviesView.hideProgress();
@@ -40,11 +41,12 @@ public class FavoriteMoviesPresenter implements FavoriteMoviesContract.Presenter
             if (moviesArray != null) {
                 // Parse the movie objects using your MovieParser
                 ArrayList<Movie> movies = MovieParser.parseMovies(moviesArray);
-                this.favoriteMovies = movies;
-
+                this.favoriteMovies = movies.stream()
+                        .filter(Movie::isFavorite)
+                        .collect(Collectors.toCollection(ArrayList::new));
                 // Update the UI
                 favoriteMoviesView.hideProgress();
-                favoriteMoviesView.initializeRecyclerView(movies);
+                favoriteMoviesView.initializeRecyclerView(this.favoriteMovies);
             } else {
                 favoriteMoviesView.hideProgress();
                 favoriteMoviesView.showError("No favorite movies found");
@@ -64,6 +66,6 @@ public class FavoriteMoviesPresenter implements FavoriteMoviesContract.Presenter
     // Method to refresh favorites list
     public void refreshFavorites() {
         favoriteMoviesView.showProgress();
-        favoriteMoviesModel.loadFavoriteMovies();
+        favoriteMoviesModel.loadMovies();
     }
 }

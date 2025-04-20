@@ -23,12 +23,12 @@ public interface FavoriteMoviesContract {
     interface Presenter {
 
         // Model Events
-        void onFavoriteMoviesLoaded(@Nullable Exception e, @Nullable JSONObject response) throws JSONException;
+        void onLoadMoviesLoaded(@Nullable Exception e, @Nullable JSONObject response) throws JSONException;
 
         void onMovieClick(Movie movie);
     }
 
     interface Model {
-        void loadFavoriteMovies();
+        void loadMovies();
     }
 }

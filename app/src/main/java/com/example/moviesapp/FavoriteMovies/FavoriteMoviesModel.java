@@ -31,9 +31,9 @@ public class FavoriteMoviesModel implements FavoriteMoviesContract.Model {
     }
 
     @Override
-    public void loadFavoriteMovies() {
+    public void loadMovies() {
         // API endpoint for favorite movies
-        String url = "http://10.0.2.2:8080/api/favorites";
+        String url = "http://10.0.2.2:8080/api/movies";
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
@@ -47,10 +47,10 @@ public class FavoriteMoviesModel implements FavoriteMoviesContract.Model {
                             JSONObject wrapper = new JSONObject();
                             wrapper.put("movies", responseArray);
                             // Pass the wrapped JSONObject to the presenter
-                            presenter.onFavoriteMoviesLoaded(null, wrapper);
+                            presenter.onLoadMoviesLoaded(null, wrapper);
                         } catch (JSONException e) {
                             try {
-                                presenter.onFavoriteMoviesLoaded(e, null);
+                                presenter.onLoadMoviesLoaded(e, null);
                             } catch (JSONException ex) {
                                 throw new RuntimeException(ex);
                             }
@@ -61,10 +61,10 @@ public class FavoriteMoviesModel implements FavoriteMoviesContract.Model {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         try {
-                            presenter.onFavoriteMoviesLoaded(error, null);
+                            presenter.onLoadMoviesLoaded(error, null);
                         } catch (JSONException e) {
                             try {
-                                presenter.onFavoriteMoviesLoaded(new Exception("Error parsing JSON"), null);
+                                presenter.onLoadMoviesLoaded(new Exception("Error parsing JSON"), null);
                             } catch (JSONException ex) {
                                 throw new RuntimeException(ex);
                             }
